@@ -3,6 +3,7 @@ package com.devilo.server;
 import com.devilo.server.GET.ActionDB;
 import com.devilo.server.GET.ActionHELP;
 import com.devilo.server.GET.ActionObject;
+import com.devilo.server.GET.ActionSTATIC;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -19,6 +20,7 @@ public class RequestThread extends Thread {
     private static final String KEYWORD_HELP = "help";
     private static final String KEYWORD_ROOT = "/";
     private static final String KEYWORD_DB = "db";
+    private static final String KEYWORD_STATIC = "static";
 
     BufferedReader inputStream;
     DataOutputStream outputStream;
@@ -43,6 +45,13 @@ public class RequestThread extends Thread {
         try {
             request = inputStream.readLine();
 
+            if ( request == null ) {
+                String response = "NULL REQUEST\n";
+                outputStream.writeBytes(response);
+                outputStream.close();
+                return;
+            }
+
             if ( request.startsWith(GET_PREFIX) ) {
 
                 String httpVersion = request.split(" ")[2];
@@ -54,7 +63,7 @@ public class RequestThread extends Thread {
 
             }
             else {
-                String response = "Invalid REQUEST\n";
+                String response = "NON GET REQUEST\n";
                 outputStream.writeBytes(response);
                 outputStream.close();
             }
@@ -94,6 +103,7 @@ public class RequestThread extends Thread {
         httpGETActionMap.put( KEYWORD_DB , new ActionDB());
         httpGETActionMap.put( KEYWORD_ROOT , new ActionHELP());
         httpGETActionMap.put( KEYWORD_HELP , new ActionHELP());
+        httpGETActionMap.put( KEYWORD_STATIC , new ActionSTATIC());
 
         if ( requestURL.equals("/") ) {
             httpGETActionMap.get(requestURL).act(requestURL, outputStream , httpVersion);

@@ -61,7 +61,7 @@ public class Server {
                 Socket socket = serverSocket.accept();
 
                 InetAddress clientAddress = socket.getInetAddress();
-                System.out.println(clientAddress.getHostName() + " connect to server");
+                //System.out.println(clientAddress.getHostName() + " connect to server");
 
                 BufferedReader inputStream = new BufferedReader( new InputStreamReader( socket.getInputStream() ));
 
